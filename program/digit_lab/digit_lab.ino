@@ -1,34 +1,51 @@
-int const ps0=A4;
-int const ps1=A5;
-int const led=26;
-int const button=16;
+#define PS0 A4
+#define PS1 A5
+#define LED 26
+#define BUTTON 16
+
+#define TH_PS0 3000
+#define TH_PS1 3000
 
 void setup() {
-  // put your setup code here, to run once:
-  pinMode(led,OUTPUT);
-  pinMode(button,INPUT_PULLUP);
-  //Serial.begin(115200);
 
+  // pin mode setup
+  pinMode(LED,OUTPUT);
+  pinMode(BUTTON,INPUT_PULLUP);
+
+  // serial setup
+  Serial.begin(115200);
+
+}
+
+void ledOn(){
+  digitalWrite(LED, 1);
+}
+void ledOff(){
+  digitalWrite(LED, 0);
 }
 
 void loop() {
-  // put your main code here, to run repeatedly:
-  checkPressureSensor();
+  
+  if(checkPressureSensor()){
+    ledOn();
+  }else{
+    ledOff();
+  }
   delay(100);
 }
 
-void checkPressureSensor(void){
-  int ps_value0=analogRead(ps0);
-  int ps_value1=analogRead(ps1);
-  Serial.print(ps_value0);
-  Serial.print(" ");
-  Serial.println(ps_value1);
+bool checkPressureSensor(){
+  int ps0Val=analogRead(PS0);
+  int ps1Val=analogRead(PS1);
 
-  if(ps_value0>3000 | ps_value1>3000){
-    ///処理関数///
-    digitalWrite(led,1);
+  Serial.print(ps0Val);
+  Serial.print(" ");
+  Serial.println(ps1Val);
+
+  if(ps0Val>TH_PS0 | ps1Val>TH_PS1){
+    return true;
   }else{
-    digitalWrite(led,0);
+    return false;
   }
 }
 
