@@ -27,11 +27,10 @@ void ledToggle(){
   }
 }
 
-void ring(){
-  Serial.println("ring");
+void post(){
+  Serial.println("post");
   HTTPClient http;
-  // TODO: ここをactuatorのWebサーバーにする．
-  http.begin("http://192.168.42.1/play?file=chaim.wav");
+  http.begin("http://192.168.42.2/lab");
   http.GET();
   http.end();
 }
@@ -59,14 +58,16 @@ void setup() {
 }
 
 void loop() {
-  
   if(checkPressureSensor()){
-    ring();
+    post();
     ledOn();
+    while(checkPressureSensor()){
+      delay(100);
+    }
   }else{
     ledOff();
   }
-  delay(1000);
+  delay(50);
 }
 
 bool checkPressureSensor(){
